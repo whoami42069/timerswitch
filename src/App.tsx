@@ -107,34 +107,41 @@ function App() {
           </motion.h1>
         </motion.header>
 
-        {/* Main Layout - Three column layout */}
-        <div className="flex flex-col lg:grid lg:grid-cols-[200px_1fr_320px] gap-4 lg:gap-6 w-full px-2 lg:px-4 pt-16 lg:pt-0">
-          {/* Left spacer for sidebar on desktop */}
-          <div className="hidden lg:block"></div>
+        {/* Main Layout - Perfectly Centered */}
+        <div className="flex flex-col lg:flex-row w-full pt-16 lg:pt-0">
+          {/* Left spacer for sidebar - exact width */}
+          <div className="hidden lg:block" style={{ width: '200px' }}></div>
           
-          {/* Center - Countdown Timers */}
-          <motion.div 
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5, delay: 0.3 }}
-            className="flex justify-center items-start"
-          >
-            <CountdownTimer />
-          </motion.div>
+          {/* Main content area with equal spacing */}
+          <div className="flex-1 flex flex-col lg:flex-row justify-center px-4">
+            {/* Center - Countdown Timers with exact centering */}
+            <motion.div 
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.5, delay: 0.3 }}
+              className="flex-1 max-w-4xl flex justify-center items-start mx-auto"
+              style={{ 
+                paddingLeft: '60px',  // Add padding to compensate for sidebar/right difference (320-200=120, /2=60)
+                paddingRight: '0px' 
+              }}
+            >
+              <CountdownTimer />
+            </motion.div>
 
-          {/* Right Side - Tic Tac Toe and Music Player */}
-          <motion.div 
-            initial={{ opacity: 0, x: 50 }}
-            animate={{ opacity: 1, x: 0 }}
-            transition={{ duration: 0.5, delay: 0.2 }}
-            className="w-full"
-          >
-            <TicTacToe />
-            {/* Music Player below Tic Tac Toe */}
-            <div className="mt-6">
-              <MusicPlayer />
-            </div>
-          </motion.div>
+            {/* Right Side - Tic Tac Toe and Music Player */}
+            <motion.div 
+              initial={{ opacity: 0, x: 50 }}
+              animate={{ opacity: 1, x: 0 }}
+              transition={{ duration: 0.5, delay: 0.2 }}
+              className="w-full lg:w-80 flex-shrink-0 ml-6"
+            >
+              <TicTacToe />
+              {/* Music Player below Tic Tac Toe */}
+              <div className="mt-6">
+                <MusicPlayer />
+              </div>
+            </motion.div>
+          </div>
         </div>
 
         {/* Animated neon lines */}
