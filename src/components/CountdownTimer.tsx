@@ -93,7 +93,7 @@ const CountdownTimer: React.FC = () => {
       y: 0,
       opacity: 1,
       transition: {
-        type: "spring",
+        type: "spring" as const,
         damping: 20,
         stiffness: 100
       }
@@ -122,7 +122,7 @@ const CountdownTimer: React.FC = () => {
         initial="hidden"
         animate="visible"
       >
-        {timezoneData.map((tz, index) => (
+        {timezoneData.map((tz) => (
           <motion.div
             key={`${tz.name}-${tz.label}`}
             variants={itemVariants}

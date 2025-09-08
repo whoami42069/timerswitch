@@ -6,7 +6,7 @@ const AnimatedEmojis: React.FC = () => {
   const containerRef = useRef<HTMLDivElement>(null);
   const [emojis, setEmojis] = useState<AnimatedEmoji[]>([]);
   const [collisionEffects, setCollisionEffects] = useState<CollisionEffect[]>([]);
-  const animationFrameRef = useRef<number>();
+  const animationFrameRef = useRef<number | undefined>(undefined);
 
   useEffect(() => {
     // Initialize emojis with random positions and velocities - using more images
