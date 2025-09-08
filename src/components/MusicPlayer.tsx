@@ -6,16 +6,44 @@ const MusicPlayer: React.FC = () => {
   const [volume, setVolume] = useState(0.5);
   const audioRef = useRef<HTMLAudioElement>(null);
 
-  // Autoplay on mount
+  // Autoplay on mount with multiple attempts
   useEffect(() => {
-    if (audioRef.current) {
-      audioRef.current.volume = volume;
-      // Try to play audio automatically
-      audioRef.current.play().catch(error => {
-        console.log('Autoplay prevented:', error);
-        setIsPlaying(false);
-      });
-    }
+    const attemptAutoplay = async () => {
+      if (audioRef.current) {
+        audioRef.current.volume = volume;
+        audioRef.current.muted = true; // Start muted to bypass autoplay policy
+        
+        try {
+          await audioRef.current.play();
+          // If successful, unmute after a short delay
+          setTimeout(() => {
+            if (audioRef.current) {
+              audioRef.current.muted = false;
+            }
+          }, 100);
+          setIsPlaying(true);
+        } catch (error) {
+          console.log('Autoplay prevented:', error);
+          setIsPlaying(false);
+          
+          // Try again on first user interaction
+          const playOnInteraction = () => {
+            if (audioRef.current && !isPlaying) {
+              audioRef.current.play().catch(console.error);
+              setIsPlaying(true);
+            }
+            document.removeEventListener('click', playOnInteraction);
+            document.removeEventListener('touchstart', playOnInteraction);
+          };
+          
+          document.addEventListener('click', playOnInteraction, { once: true });
+          document.addEventListener('touchstart', playOnInteraction, { once: true });
+        }
+      }
+    };
+    
+    // Attempt autoplay after a small delay to ensure component is mounted
+    setTimeout(attemptAutoplay, 500);
   }, []);
 
   useEffect(() => {
@@ -59,6 +87,8 @@ const MusicPlayer: React.FC = () => {
       <audio
         ref={audioRef}
         loop
+        autoPlay
+        muted
         src="https://www.bensound.com/bensound-music/bensound-littleidea.mp3"
       />
 
